@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-T3Oy8v4y4dOzj0LioByWpNG8J+kBh6FwAS6fTrUWfz8hQiQ2nl+ZePn12mJFp8hZJYBfzASwJ6UkM6mBv6Q2Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<title>Solar System Animation</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	
+    <style>
+		
+		@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400");
+		@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed&display=swap');
+
+html {
+  font-size: 16px;
+  background-color: #000;
+
+}
+
+#ideal-orbit-size ~ .universe {
+  --planet-size-factor: 0.01;
+  --sun-size-factor: 0.001;
+}
+@media (max-width: 649px) {
+  #ideal-orbit-size:checked ~ .universe {
+    --planet-size-factor: 0.075;
+    --sun-size-factor: 0.0175;
+  }
+}
+@media (min-width: 650px) {
+  #ideal-orbit-size:checked ~ .universe {
+    --planet-size-factor: 0.15;
+    --sun-size-factor: 0.025;
+  }
+}
+#real-time:checked ~ .universe {
+  --speed-of-animation: 1;
+}
+#one-year-per-minute:checked ~ .universe {
+  --speed-of-animation: 518400;
+}
+#one-year-per-second:checked ~ .universe {
+  --speed-of-animation: 31104000;
+}
+#topview ~ .universe {
+  --topview: -65deg;
+  --angle-sun-glow: 65deg;
+}
+#topview:checked ~ .universe {
+  --topview: 0deg;
+  --angle-sun-glow: 0deg;
+}
+#isometric ~ .universe {
+  --perspective: 750px;
+}
+#isometric:checked ~ .universe {
+  --perspective: 10000px;
+}
+.universe {
+  --orbit-size-factor: 1000000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(#060927 0%, #000 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  perspective: var(--perspective);
+  transition: perspective 2s;
+}
+.solarsystem {
+  position: relative;
+  width: 90%;
+  max-width: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotateZ(90deg) rotateY(var(--topview));
+  transform-style: preserve-3d;
+  transition: transform 2s;
+}
+.solarsystem::after {
+  display: block;
+  content: "";
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 50%;
+}
+.sun {
+  position: absolute;
+  width: calc(1391px * var(--sun-size-factor));
+  height: calc(1391px * var(--sun-size-factor));
+  background-color: #ffe493;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transition: width 2s, height 2s;
+}
+.sun::before {
+  display: block;
+  content: "";
+  height: 600%;
+  width: 600%;
+  background: radial-gradient(rgba(255,228,147,0.4), rgba(255,228,147,0.1) 40%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  transform-origin: center center;
+  transform: translateY(-40%) translateX(-40%) rotateY(var(--angle-sun-glow));
+  transition: transform 2s;
+}
+#ideal-orbit-size:checked ~ .universe .sun {
+  transition-delay: 0.6s;
+}
+.sun-orbit {
+  transform-style: preserve-3d;
+  border-radius: 50%;
+  transition: width 2s, height 2s;
+}
+.mercury-orbit {
+  position: absolute;
+  width: 1.29%;
+  height: 1.29%;
+  transform: rotateZ(-224deg);
+  transition-delay: 0s;
+  z-index: 9;
+}
+#ideal-orbit-size:checked ~ .universe .mercury-orbit {
+  width: 12.5%;
+  height: 12.5%;
+  transition-delay: 0.6s;
+}
+.venus-orbit {
+  position: absolute;
+  width: 2.4%;
+  height: 2.4%;
+  transform: rotateZ(-144deg);
+  transition-delay: 0.1s;
+  z-index: 8;
+}
+#ideal-orbit-size:checked ~ .universe .venus-orbit {
+  width: 25%;
+  height: 25%;
+  transition-delay: 0.5s;
+}
+.earth-orbit {
+  position: absolute;
+  width: 3.33%;
+  height: 3.33%;
+  transform: rotateZ(-101deg);
+  transition-delay: 0.2s;
+  z-index: 7;
+}
+#ideal-orbit-size:checked ~ .universe .earth-orbit {
+  width: 37.5%;
+  height: 37.5%;
+  transition-delay: 0.4s;
+}
+.mars-orbit {
+  position: absolute;
+  width: 5.06%;
+  height: 5.06%;
+  transform: rotateZ(-39deg);
+  transition-delay: 0.3s;
+  z-index: 6;
+}
+#ideal-orbit-size:checked ~ .universe .mars-orbit {
+  width: 50%;
+  height: 50%;
+  transition-delay: 0.3s;
+}
+.jupiter-orbit {
+  position: absolute;
+  width: 17.25%;
+  height: 17.25%;
+  transform: rotateZ(-245deg);
+  transition-delay: 0.4s;
+  z-index: 5;
+}
+#ideal-orbit-size:checked ~ .universe .jupiter-orbit {
+  width: 62.5%;
+  height: 62.5%;
+  transition-delay: 0.2s;
+}
+.saturn-orbit {
+  position: absolute;
+  width: 31.65%;
+  height: 31.65%;
+  transform: rotateZ(-282deg);
+  transition-delay: 0.5s;
+  z-index: 4;
+}
+#ideal-orbit-size:checked ~ .universe .saturn-orbit {
+  width: 75%;
+  height: 75%;
+  transition-delay: 0.1s;
+}
+.uranus-orbit {
+  position: absolute;
+  width: 63.96%;
+  height: 63.96%;
+  transform: rotateZ(-29deg);
+  transition-delay: 0.6s;
+  z-index: 3;
+}
+#ideal-orbit-size:checked ~ .universe .uranus-orbit {
+  width: 87.5%;
+  height: 87.5%;
+  transition-delay: 0s;
+}
+.neptun-orbit {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotateZ(-347deg);
+  z-index: 2;
+}
+.orbit__visual {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.13);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: translate3d(-1px, -1px, 0);
+  transform-style: preserve-3d;
+}
+.orbit__shape {
+  position: absolute;
+  width: calc(100% + 1px);
+  height: calc(100% + 1px);
+  animation: orbit infinite;
+  animation-timing-function: linear;
+  animation-delay: calc((var(--seconds-left) * -1) / var(--speed-of-animation));
+  transform-style: preserve-3d;
+}
+.orbit__shape--mercury {
+  animation-duration: calc(7603200s / var(--speed-of-animation));
+}
+.orbit__shape--venus {
+  animation-duration: calc(19414166s / var(--speed-of-animation));
+}
+.orbit__shape--earth {
+  animation-duration: calc(31553280s / var(--speed-of-animation));
+}
+.orbit__shape--mars {
+  animation-duration: calc(59356800s / var(--speed-of-animation));
+}
+.orbit__shape--jupiter {
+  animation-duration: calc(374025600s / var(--speed-of-animation));
+}
+.orbit__shape--saturn {
+  animation-duration: calc(928886400s / var(--speed-of-animation));
+}
+.orbit__shape--uranus {
+  animation-duration: calc(2649369600s / var(--speed-of-animation));
+}
+.orbit__shape--neptun {
+  animation-duration: calc(5196787200s / var(--speed-of-animation));
+}
+.planet {
+  position: relative;
+  border-radius: 50%;
+  min-width: 1px;
+  min-height: 1px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  transform-style: preserve-3d;
+  transition: width 2s, height 2s, top 2s;
+}
+.planet::before {
+  position: relative;
+  display: none;
+  content: "";
+  height: 500%;
+  transform: translateY(-100%);
+  width: 100%;
+  background: linear-gradient(to top, rgba(1,2,13,0.8), rgba(1,2,13,0) 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 100% 100%, 0% 100%);
+}
+.planet__structure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+.planet__structure--1 {
+  transform: rotateZ(30deg);
+}
+.planet__structure--2 {
+  transform: rotateZ(-30deg);
+}
+.planet__structure--3 {
+  transform: rotateX(30deg) rotateY(90deg);
+}
+.planet__structure--4 {
+  transform: rotateX(-30deg) rotateY(90deg);
+}
+.planet__structure--5 {
+  transform: rotateZ(90deg) rotateY(30deg);
+}
+.planet__structure--6 {
+  transform: rotateZ(90deg) rotateY(-30deg);
+}
+.planet__structure::before {
+  position: absolute;
+  top: 0;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotateX(45deg);
+  background-color: inherit;
+  border-radius: 50%;
+}
+.planet__structure::after {
+  position: absolute;
+  top: 0;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotateX(-45deg);
+  background-color: inherit;
+  border-radius: 50%;
+}
+.mercury {
+  width: calc(4.87px * var(--planet-size-factor));
+  height: calc(4.87px * var(--planet-size-factor));
+  background-color: #68696d;
+  top: calc(-2.435px * var(--planet-size-factor));
+}
+.venus {
+  width: calc(12.1px * var(--planet-size-factor));
+  height: calc(12.1px * var(--planet-size-factor));
+  background-color: #d3a567;
+  top: calc(-6.05px * var(--planet-size-factor));
+}
+.earth {
+  width: calc(12.7px * var(--planet-size-factor));
+  height: calc(12.7px * var(--planet-size-factor));
+  background-color: #00f;
+  top: calc(-6.35px * var(--planet-size-factor));
+}
+.mars {
+  width: calc(6.7px * var(--planet-size-factor));
+  height: calc(6.7px * var(--planet-size-factor));
+  background-color: #c1440e;
+  top: calc(-3.45px * var(--planet-size-factor));
+}
+.jupiter {
+  width: calc(139.822px * var(--planet-size-factor));
+  height: calc(139.822px * var(--planet-size-factor));
+  background-color: #d8ca9d;
+  top: calc(-69.911px * var(--planet-size-factor));
+}
+.saturn {
+  width: calc(116.464px * var(--planet-size-factor));
+  height: calc(116.464px * var(--planet-size-factor));
+  background-color: #d2c0a5;
+  top: calc(-58.232px * var(--planet-size-factor));
+}
+.uranus {
+  width: calc(50.724px * var(--planet-size-factor));
+  height: calc(50.724px * var(--planet-size-factor));
+  background-color: #d1e7e7;
+  top: calc(-25.362px * var(--planet-size-factor));
+}
+.neptun {
+  width: calc(49.244px * var(--planet-size-factor));
+  height: calc(49.244px * var(--planet-size-factor));
+  background-color: #3f54ba;
+  top: calc(-24.622px * var(--planet-size-factor));
+}
+.planet-orbit {
+  animation: orbit infinite;
+  animation-timing-function: linear;
+  transform-style: preserve-3d;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+.planet-orbit--saturn {
+  animation-duration: calc(933465600s / var(--speed-of-animation));
+  animation-delay: calc(((var(--seconds-left) + 433366400) * -1) / var(--speed-of-animation));
+}
+.rings-of-saturn {
+  transform: rotateX(0deg) rotateY(27deg);
+  position: absolute;
+  width: calc(280px * var(--planet-size-factor) + 3px);
+  height: calc(280px * var(--planet-size-factor) + 3px);
+  background: radial-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 45%, #c1b199 48%, #c1b199 65%, rgba(0,0,0,0) 66%, #c1b199 68%, #c1b199 100%);
+  top: calc(-140px * var(--planet-size-factor) - 1.5px);
+  border-radius: 50%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  transition: width 2s, height 2s, top 2s;
+}
+.ascending-node {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+/*&--mercury
+    transform rotateZ(48.33deg)
+  &--venus
+    transform rotateZ(76.68deg)
+  &--earth
+    transform rotateZ(-11.26deg)
+  &--mars
+    transform rotateZ(49.58deg)
+  &--jupiter
+    transform rotateZ(100.55deg)
+  &--saturn
+    transform rotateZ(113.72deg)
+  &--uranus
+    transform rotateZ(74.23deg)
+  &--neptun
+    transform rotateZ(131.72deg)*/
+}
+.inclination {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+/*&--mercury
+    transform rotateX(-7deg)
+  &--venus
+    transform rotateX(-3.5deg)
+  &--earth
+    transform rotateX(0deg)
+  &--mars
+    transform rotateX(-1.9deg)
+  &--jupiter
+    transform rotateX(-1.3deg)
+  &--saturn
+    transform rotateX(-2.5deg)
+  &--uranus
+    transform rotateX(-0.8deg)
+  &--neptun
+    transform rotateX(-1.8deg)*/
+}
+.content {
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  top: 0;
+  left: 0;
+  position: absolute;
+  font-family: 'Saira Condensed', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+
+}
+
+.hide-button,
+.show-button {
+  margin-top: 10px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #333;
+  cursor: pointer;
+  
+}
+
+.hide-button {
+  background-color: transparent;
+}
+
+.show-button {
+  background-color: transparent;
+}
+
+.content h1 {
+  font-weight: 300;
+  text-transform: uppercase;
+font-family: 'Saira Condensed', sans-serif;
+  letter-spacing: 15px;
+  margin-left: 20px;
+}
+.controls {
+  justify-content: center;
+  font-weight: 300;
+  letter-spacing: 1px;
+  font-size: 16px;
+  max-width: 600px;
+  width: 90%;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+@media (max-width: 649px) {
+  .controls {
+    position: absolute;
+    bottom: 0;
+  }
+}
+@media (min-width: 650px) {
+  .controls {
+    display: inline-block;
+  }
+}
+.controls span {
+  width: 120px;
+}
+.controls__group {
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.7);
+  display: flex;
+  flex: 1;
+  margin-bottom: 15px;
+}
+.controls__group > * {
+  padding: 10px;
+  display: block;
+}
+.button {
+  flex: 1;
+  transition: background-color 0.4s;
+  text-transform: uppercase;
+  user-select: none;
+}
+.button:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+.button:first-of-type {
+  border-radius: 9px 0 0 9px;
+}
+.button:last-child {
+  border-radius: 0 9px 9px 0;
+}
+#ideal-orbit-size:checked ~ .content .button.ideal-size,
+#correct-orbit-size:checked ~ .content .button.correct-size,
+#real-time:checked ~ .content .button.real-time,
+#one-year-per-minute:checked ~ .content .button.one-year-per-minute,
+#one-year-per-second:checked ~ .content .button.one-year-per-second,
+#topview:checked ~ .content .button.topview,
+#isometric:checked ~ .content .button.isometric,
+#threedee:checked ~ .content .button.threedee {
+  background-color: rgba(255,255,255,0.3);
+}
+@-moz-keyframes orbit {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes orbit {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+@-o-keyframes orbit {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+@keyframes orbit {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+	</style>
+
+</head>
+<body>
+	<input type="radio" id="correct-orbit-size" name="orbit-size" /><input type="radio" id="ideal-orbit-size" name="orbit-size" checked="checked" /><input type="radio" id="real-time" name="velocity" /><input type="radio" id="one-year-per-minute" name="velocity" checked="checked" /><input type="radio" id="one-year-per-second" name="velocity" /><input type="radio" id="topview" name="perspective" /><input type="radio" id="isometric" name="perspective" /><input type="radio" id="threedee" name="perspective" checked="checked" />
+	<div class="universe">
+		<div class="solarsystem">
+			<div class="sun">
+				<div class="planet__structure planet__structure--1"></div>
+				<div class="planet__structure planet__structure--2"></div>
+				<div class="planet__structure planet__structure--3"></div>
+				<div class="planet__structure planet__structure--4"></div>
+				<div class="planet__structure planet__structure--5"></div>
+				<div class="planet__structure planet__structure--6"></div>
+			</div>
+			<div class="mercury-orbit sun-orbit">
+				<div class="ascending-node ascending-node--mercury">
+					<div class="inclination inclination--mercury">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--mercury">
+							<div class="planet mercury">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="venus-orbit sun-orbit">
+				<div class="ascending-node ascending-node--venus">
+					<div class="inclination inclination--venus">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--venus">
+							<div class="planet venus">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="earth-orbit sun-orbit">
+				<div class="ascending-node ascending-node--earth">
+					<div class="inclination inclination--earth">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--earth">
+							<div class="planet earth">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mars-orbit sun-orbit">
+				<div class="ascending-node ascending-node--mars">
+					<div class="inclination inclination--mars">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--mars">
+							<div class="planet mars">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="jupiter-orbit sun-orbit">
+				<div class="ascending-node ascending-node--jupiter">
+					<div class="inclination inclination--jupiter">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--jupiter">
+							<div class="planet jupiter">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="saturn-orbit sun-orbit">
+				<div class="ascending-node ascending-node--saturn">
+					<div class="inclination inclination--saturn">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--saturn">
+							<div class="planet saturn">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+							<div class="planet-orbit planet-orbit--saturn">
+								<div class="rings-of-saturn"> </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="uranus-orbit sun-orbit">
+				<div class="ascending-node ascending-node--uranus">
+					<div class="inclination inclination--uranus">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--uranus">
+							<div class="planet uranus">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="neptun-orbit sun-orbit">
+				<div class="ascending-node ascending-node--neptun">
+					<div class="inclination inclination--neptun">
+						<div class="orbit__visual"></div>
+						<div class="orbit__shape orbit__shape--neptun">
+							<div class="planet neptun">
+								<div class="planet__structure planet__structure--1"></div>
+								<div class="planet__structure planet__structure--2"></div>
+								<div class="planet__structure planet__structure--3"></div>
+								<div class="planet__structure planet__structure--4"></div>
+								<div class="planet__structure planet__structure--5"></div>
+								<div class="planet__structure planet__structure--6"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+		<h1>The Solar System</h1>
+		<div class="controls">
+			<div class="controls__group"><span>Orbit Size:</span><label class="button correct-size" for="correct-orbit-size">Correct</label><label class="button ideal-size" for="ideal-orbit-size">Idealized</label></div>
+			<div class="controls__group"><span>Velocity:</span><label class="button real-time" for="real-time">Realtime</label><label class="button one-year-per-minute" for="one-year-per-minute">1 Year / Min</label><label class="button one-year-per-second" for="one-year-per-second">1 Year / Sec</label></div>
+			<div class="controls__group"><span>Perspective:</span><label class="button threedee" for="threedee">3d</label><label class="button topview" for="topview">Top</label><label class="button isometric" for="isometric">Isometric</label></div>
+		</div>
+		<button class="hide-button" onclick="hideContent()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-eye-slash" viewBox="0 0 16 16">
+			<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
+			<path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
+			<path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>
+		  </svg></button>
+		<button class="show-button" onclick="showContent()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+			<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+			<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+		  </svg></button>
+		
+	</div>
+
+	<script>
+
+let timestamp_start = new Date("2019-01-01").getTime();
+let timestamp_now = new Date().getTime();
+let secondsLeft = (timestamp_now - timestamp_start) / 1000;
+let root = document.documentElement;
+root.style.setProperty('--seconds-left', `${secondsLeft}s`);
+
+var contentDiv = document.querySelector(".content .controls");
+var show = document.querySelector(".content .show-button");
+var hide = document.querySelector(".content .hide-button");
+hide.style.display = "none";
+contentDiv.style.display = "none";
+
+
+function hideContent() {
+	contentDiv.style.display = "none";
+	show.style.display = "block";
+	hide.style.display = "none";
+
+}
+
+function showContent() {
+	contentDiv.style.display = "block";
+	hide.style.display = "block";
+	show.style.display = "none";
+
+}
+	</script>
+</body>
+</html>
